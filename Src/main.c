@@ -303,7 +303,7 @@ int main(void)
 	}
 
 
-	I2C1_SendCommand(0x26); // Horizontal scroll command
+	I2C1_SendCommand(0x27); // Horizontal scroll command
 	I2C1_SendCommand(0x00); // Dummy byte 
 	I2C1_SendCommand(0x00); // Start page address
 	I2C1_SendCommand(0x07); // Scroll interval
