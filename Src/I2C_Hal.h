@@ -1,3 +1,9 @@
+/*
+ *
+ * This file contains the minimal tools needed to create an I2C application using the STM32F407.
+ * This is not a full HAL for the device and there may be functionality missing.
+ *
+ */
 #include <stdint.h>
 
 typedef struct {
