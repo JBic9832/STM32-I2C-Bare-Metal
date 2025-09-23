@@ -36,7 +36,7 @@ typedef struct {
 	uint32_t OT13     : 1;
 	uint32_t OT14     : 1;
 	uint32_t OT15     : 1;
-	uint32_t reserved : 16;
+	uint32_t reserved :16;
 } GPIO_OTYPER_t;
 
 typedef struct {
@@ -94,27 +94,27 @@ typedef struct {
 	uint32_t IDR13    : 1;
 	uint32_t IDR14    : 1;
 	uint32_t IDR15    : 1;
-	uint32_t reserved : 16;
+	uint32_t reserved :16;
 } GPIO_IDR_t;
 
 typedef struct {
-	uint32_t ODR0      : 1;
-	uint32_t ODR1      : 1;
-	uint32_t ODR2      : 1;
-	uint32_t ODR3      : 1;
-	uint32_t ODR4      : 1;
-	uint32_t ODR5      : 1;
-	uint32_t ODR6      : 1;
-	uint32_t ODR7      : 1;
-	uint32_t ODR8      : 1;
-	uint32_t ODR9      : 1;
-	uint32_t ODR10     : 1;
-	uint32_t ODR11     : 1;
-	uint32_t ODR12     : 1;
-	uint32_t ODR13     : 1;
-	uint32_t ODR14     : 1;
-	uint32_t ODR15     : 1;
-	uint32_t reserved : 16;
+	uint32_t ODR0     : 1;
+	uint32_t ODR1     : 1;
+	uint32_t ODR2     : 1;
+	uint32_t ODR3     : 1;
+	uint32_t ODR4     : 1;
+	uint32_t ODR5     : 1;
+	uint32_t ODR6     : 1;
+	uint32_t ODR7     : 1;
+	uint32_t ODR8     : 1;
+	uint32_t ODR9     : 1;
+	uint32_t ODR10    : 1;
+	uint32_t ODR11    : 1;
+	uint32_t ODR12    : 1;
+	uint32_t ODR13    : 1;
+	uint32_t ODR14    : 1;
+	uint32_t ODR15    : 1;
+	uint32_t RESERVED :16;
 } GPIO_ODR_t;
 
 typedef struct {
@@ -153,24 +153,24 @@ typedef struct {
 } GPIO_BSRR_t;
 
 typedef struct {
-	uint32_t LCK0  : 1;
-	uint32_t LCK1  : 1;
-	uint32_t LCK2  : 1;
-	uint32_t LCK3  : 1;
-	uint32_t LCK4  : 1;
-	uint32_t LCK5  : 1;
-	uint32_t LCK6  : 1;
-	uint32_t LCK7  : 1;
-	uint32_t LCK8  : 1;
-	uint32_t LCK9  : 1;
-	uint32_t LCK10 : 1;
-	uint32_t LCK11 : 1;
-	uint32_t LCK12 : 1;
-	uint32_t LCK13 : 1;
-	uint32_t LCK14 : 1;
-	uint32_t LCK15 : 1;
-	uint32_t LCKK  : 1;
-	uint32_t reserved : 15;
+	uint32_t LCK0     : 1;
+	uint32_t LCK1     : 1;
+	uint32_t LCK2     : 1;
+	uint32_t LCK3     : 1;
+	uint32_t LCK4     : 1;
+	uint32_t LCK5     : 1;
+	uint32_t LCK6     : 1;
+	uint32_t LCK7     : 1;
+	uint32_t LCK8     : 1;
+	uint32_t LCK9     : 1;
+	uint32_t LCK10    : 1;
+	uint32_t LCK11    : 1;
+	uint32_t LCK12    : 1;
+	uint32_t LCK13    : 1;
+	uint32_t LCK14    : 1;
+	uint32_t LCK15    : 1;
+	uint32_t LCKK     : 1;
+	uint32_t RESERVED :15;
 } GPIO_LCKR_t;
 
 /*
