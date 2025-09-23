@@ -252,6 +252,7 @@ typedef struct {
 	volatile uint32_t PLLI2SCFGR;
 } RCCReg_t;
 
+// Addresses are specific to the STM32F405/415/407/417/427/437/429/439
 #define GPIOB_BASE_ADDR 0x40020400u
 #define GPIOB ((GPIOReg_t*)GPIOB_BASE_ADDR)
 
