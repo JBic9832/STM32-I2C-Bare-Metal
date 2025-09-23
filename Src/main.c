@@ -26,53 +26,55 @@ typedef struct {
 } PixelLocation_t;
 
 void I2C1_SendCommand(uint8_t cmd) {
-    volatile uint32_t tmp;
+    volatile I2C_SR1_t tmp1;
+    volatile I2C_SR2_t tmp2;
 
     // START
-    I2C1->CR1 |= (1 << 8);
-    while (!(I2C1->SR1 & (1 << 0))); // SB
+    I2C1->CR1.START = 1;
+    while (!(I2C1->SR1.SB == 1)); // SB
 
     // Address + W
-    I2C1->DR = (I2C_SLAVE_ADDR) | 0; // 7-bit addr << 1, write
-    while (!(I2C1->SR1 & (1 << 1))); // ADDR
-    tmp = I2C1->SR1;
-    tmp = I2C1->SR2; (void)tmp;
+    I2C1->DR.DATA = (I2C_SLAVE_ADDR) | 0; // 7-bit addr << 1, write
+    while (!(I2C1->SR1.ADDR == 1)); // ADDR
+    tmp1 = I2C1->SR1;
+    tmp2 = I2C1->SR2; (void)tmp1; (void)tmp2;
 
     // Control byte = 0x00 (command)
-    I2C1->DR = 0x00;
-    while (!(I2C1->SR1 & (1 << 7))); // TXE
+    I2C1->DR.DATA = 0x00;
+    while (!(I2C1->SR1.TxE == 1)); // TXE
 
     // Actual command
-    I2C1->DR = cmd;
-    while (!(I2C1->SR1 & (1 << 2))); // BTF = byte transfer finished
+    I2C1->DR.DATA = cmd;
+    while (!(I2C1->SR1.BTF == 1)); // BTF = byte transfer finished
 
     // STOP
-    I2C1->CR1 |= (1 << 9);
+    I2C1->CR1.STOP = 1;
 }
 
 void I2C1_SendData(uint8_t data) {
-    volatile uint32_t tmp;
+    volatile I2C_SR1_t tmp1;
+    volatile I2C_SR2_t tmp2;
 
     // START
-    I2C1->CR1 |= (1 << 8);
-    while (!(I2C1->SR1 & (1 << 0))); // SB
+    I2C1->CR1.START = 1;
+    while (!(I2C1->SR1.SB == 1)); // SB
 
     // Address + W
-    I2C1->DR = (I2C_SLAVE_ADDR) | 0; // 7-bit addr << 1, write
-    while (!(I2C1->SR1 & (1 << 1))); // ADDR
-    tmp = I2C1->SR1;
-    tmp = I2C1->SR2; (void)tmp;
+    I2C1->DR.DATA = (I2C_SLAVE_ADDR) | 0; // 7-bit addr << 1, write
+    while (!(I2C1->SR1.ADDR == 1)); // ADDR
+    tmp1 = I2C1->SR1;
+    tmp2 = I2C1->SR2; (void)tmp1; (void)tmp2;
 
     // Control byte = 0x00 (command)
-    I2C1->DR = 0x40;
-    while (!(I2C1->SR1 & (1 << 7))); // TXE
+    I2C1->DR.DATA = 0x40;
+    while (!(I2C1->SR1.TxE == 1)); // TXE
 
     // Actual command
-    I2C1->DR = data;
-    while (!(I2C1->SR1 & (1 << 2))); // BTF = byte transfer finished
+    I2C1->DR.DATA = data;
+    while (!(I2C1->SR1.BTF == 1)); // BTF = byte transfer finished
 
     // STOP
-    I2C1->CR1 |= (1 << 9);
+    I2C1->CR1.STOP = 1;
 }
 
 PixelLocation_t GetPixelLocation(uint16_t x, uint16_t y) {
@@ -167,24 +169,23 @@ int main(void)
 	 * Set the I2C peripheral clock frequency 
 	 * in the second I2C control register
 	 */
-	// Clear the frequency bits
-	I2C1->CR2 &= ~(0x3F << 0);
 	// Set frequency to 16MHz
-	I2C1->CR2 |=   0x10 << 0;
+	I2C1->CR2.FREQ = 16;
 
 	/*
 	 * Configure I2C clock control register
 	 */
 	// Set I2C master mode to standard mode (Sm)
-	I2C1->CCR   = 0x50;
-	I2C1->TRISE = 17;
+	I2C1->CCR.CCR = 0x50;
+	I2C1->TRISE.TRISE = 17;
 
 	/*
 	 * Enable I2C peripheral
 	 */
-	I2C1->CR1 |= 1 << 0;
+	//I2C1->CR1 |= 1 << 0;
+	I2C1->CR1.PE = 1;
 	
-	while(!(I2C1->CR1 & 1));  // wait for PE
+	while(!(I2C1->CR1.PE == 1));  // wait for PE
 
     // Minimal command sequence
     I2C1_SendCommand(0xAE); // Display OFF
@@ -229,7 +230,7 @@ int main(void)
 	cursor.pos_y = 0;
 
 	// Draw message
-	const char* message = "Testing AFR...";
+	const char* message = "Testing DR...";
 	WriteMessageToFramebuffer(message, framebuffer, &cursor);
 
 	SetPageAndColToZeroAddr();

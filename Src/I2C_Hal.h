@@ -204,19 +204,122 @@ typedef struct {
 	volatile GPIO_LCKR_t LCKR;
 	volatile GPIO_AFR_t AFRL;
 	volatile GPIO_AFR_t AFRH;
-} __attribute__((packed)) GPIOReg_t;
+} GPIOReg_t;
 
 typedef struct {
-	volatile uint32_t CR1;
-	volatile uint32_t CR2;
-	volatile uint32_t OAR1;
-	volatile uint32_t OAR2; 
-	volatile uint32_t DR; 
-	volatile uint32_t SR1; 
-	volatile uint32_t SR2; 
-	volatile uint32_t CCR; 
-	volatile uint32_t TRISE; 
-	volatile uint32_t FLTR; 
+	uint32_t PE        : 1;
+	uint32_t SMBUS     : 1;
+	uint32_t RESERVED0 : 1;
+	uint32_t SMBTYPE   : 1;
+	uint32_t ENARP     : 1;
+	uint32_t PEC_EN    : 1;
+	uint32_t ENGC      : 1;
+	uint32_t NOSTRETCH : 1;
+	uint32_t START     : 1;
+	uint32_t STOP      : 1;
+	uint32_t ACK       : 1;
+	uint32_t POS       : 1;
+	uint32_t PEC       : 1;
+	uint32_t ALERT     : 1;
+	uint32_t RESERVED1 : 1;
+	uint32_t SWRST     : 1;
+	uint32_t RESERVED  :16;
+} I2C_CR1_t;
+
+typedef struct {
+	 uint32_t FREQ      : 6;
+	 uint32_t RESERVED0 : 2;
+	 uint32_t ITERREN   : 1;
+	 uint32_t ITEVTEN   : 1;
+	 uint32_t ITBUFEN   : 1;
+	 uint32_t DMAEN     : 1;
+	 uint32_t LAST      : 1;
+	 uint32_t RESERVED1 :19;
+ } I2C_CR2_t;
+
+typedef struct {
+	uint32_t ADD0      : 1;
+	uint32_t ADDR      : 7;
+	uint32_t ADD       : 2;
+	uint32_t RESERVED0 : 5;
+	uint32_t ADDMODE   : 1;
+	uint32_t RESERVED1 :16;
+} I2C_OAR1_t;
+
+typedef struct {
+	uint32_t ENDUAL   : 1;
+	uint32_t ADD2     : 7;
+	uint32_t RESERVED :24;
+} I2C_OAR2_t;
+
+typedef struct {
+	uint32_t DATA     : 8;
+	uint32_t RESERVED :24;
+} I2C_DR_t;
+
+typedef struct {
+	uint32_t SB        : 1;
+	uint32_t ADDR      : 1;
+	uint32_t BTF       : 1;
+	uint32_t ADD10     : 1;
+	uint32_t STOPF     : 1;
+	uint32_t RESERVED0 : 1;
+	uint32_t RxNE      : 1;
+	uint32_t TxE       : 1;
+	uint32_t BERR      : 1;
+	uint32_t ARLO      : 1;
+	uint32_t AF        : 1;
+	uint32_t OVR       : 1;
+	uint32_t PECERR    : 1;
+	uint32_t RESERVED1 : 1;
+	uint32_t TIMEOUT   : 1;
+	uint32_t SMBALERT  : 1;
+	uint32_t RESERVED2 :16;
+} I2C_SR1_t;
+
+typedef struct {
+	uint32_t MSL        : 1;
+	uint32_t BUSY       : 1;
+	uint32_t TRA        : 1;
+	uint32_t RESERVED0  : 1;
+	uint32_t GENCALL    : 1;
+	uint32_t SMBDEFAULT : 1;
+	uint32_t SMBHOST    : 1;
+	uint32_t DUALF      : 1;
+	uint32_t PEC        : 8;
+	uint32_t RESERVED1  :16;
+} I2C_SR2_t;
+
+typedef struct {
+	uint32_t CCR       :12;
+	uint32_t RESERVED0 : 2;
+	uint32_t DUTY      : 1;
+	uint32_t FS        : 1;
+	uint32_t RESERVED1 :16;
+} I2C_CCR_t;
+
+typedef struct {
+	uint32_t TRISE    : 6;
+	uint32_t RESERVED :26;
+} I2C_TRISE_t;
+
+typedef struct {
+	uint32_t DNF      : 4;
+	uint32_t ANOFF    : 1;
+	uint32_t RESERVED :27;
+} I2C_FLTR_t;
+
+typedef struct {
+	volatile I2C_CR1_t CR1;
+	volatile I2C_CR2_t CR2;
+	volatile I2C_OAR1_t OAR1;
+	volatile I2C_OAR2_t OAR2; 
+	volatile I2C_DR_t DR; 
+	volatile I2C_SR1_t SR1; 
+	volatile I2C_SR2_t SR2; 
+	volatile I2C_CCR_t CCR; 
+	volatile I2C_TRISE_t TRISE; 
+	volatile I2C_FLTR_t FLTR; 
 } I2CReg_t;
 
 typedef struct {
