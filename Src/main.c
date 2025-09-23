@@ -1,7 +1,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include <characters.h>
+#include "characters.h"
+#include "I2C_Hal.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
@@ -10,73 +11,6 @@
 // I2C1 clock PB6
 // I2C1 data  PB7
 
-typedef struct {
-	volatile uint32_t MODER;
-	volatile uint32_t OTYPER;
-	volatile uint32_t OSPEEDR;
-	volatile uint32_t PUPDR;
-	volatile uint32_t IDR;
-	volatile uint32_t ODR;
-	volatile uint32_t BSRR;
-	volatile uint32_t LCKR;
-	volatile uint32_t AFRL;
-	volatile uint32_t AFRH;
-} GPIOReg_t;
-
-#define GPIOB_BASE_ADDR 0x40020400u
-#define GPIOB ((GPIOReg_t*)GPIOB_BASE_ADDR)
-
-typedef struct {
-	volatile uint32_t CR1;
-	volatile uint32_t CR2;
-	volatile uint32_t OAR1;
-	volatile uint32_t OAR2; 
-	volatile uint32_t DR; 
-	volatile uint32_t SR1; 
-	volatile uint32_t SR2; 
-	volatile uint32_t CCR; 
-	volatile uint32_t TRISE; 
-	volatile uint32_t FLTR; 
-} I2CReg_t;
-
-#define I2C1_BASE_ADDR 0x40005400u
-#define I2C1 ((I2CReg_t*)I2C1_BASE_ADDR)
-
-typedef struct {
-	volatile uint32_t CR;
-	volatile uint32_t PLLCFGR;
-	volatile uint32_t CFGR;
-	volatile uint32_t CIR;
-	volatile uint32_t AHB1RSTR;
-	volatile uint32_t AHB2RSTR;
-	volatile uint32_t AHB3RSTR;
-	uint32_t RESERVED0;
-	volatile uint32_t APB1RSTR;
-	volatile uint32_t APB2RSTR;
-	uint32_t RESERVED1[2];
-	volatile uint32_t AHB1ENR;
-	volatile uint32_t AHB2ENR;
-	volatile uint32_t AHB3ENR;
-	uint32_t RESERVED2;
-	volatile uint32_t APB1ENR;
-	volatile uint32_t APB2ENR;
-	uint32_t RESERVED3[2];
-	volatile uint32_t AHB1LPENR;
-	volatile uint32_t AHB2LPENR;
-	volatile uint32_t AHB3LPENR;
-	uint32_t RESERVED4;
-	volatile uint32_t APB1LPENR;
-	volatile uint32_t APB2LPENR;
-	uint32_t RESERVED5[2];
-	volatile uint32_t BDCR;
-	volatile uint32_t CSR;
-	uint32_t RESERVED6[2];
-	volatile uint32_t SSCGR;
-	volatile uint32_t PLLI2SCFGR;
-} RCCReg_t;
-
-#define RCC_BASE_ADDR 0x40023800u
-#define RCC ((RCCReg_t*)RCC_BASE_ADDR)
 
 uint8_t I2C_SLAVE_ADDR = 0x78;
 
@@ -166,9 +100,11 @@ typedef struct {
 	int pos_y;
 } Cursor_t;
 
-void DrawCharToFramebuffer(uint8_t* character, uint8_t* framebuffer, Cursor_t* cursor) {
+void DrawCharToFramebuffer(char character, uint8_t* framebuffer, Cursor_t* cursor) {
+	int idx = character - 32;
+	uint8_t* characterBitmap = characters[idx];
 	for (int row = 0; row < 7; row++) {
-		uint8_t rowbits = character[row];
+		uint8_t rowbits = characterBitmap[row];
 		for (int col = 0; col < 5; col++) {
 			if (rowbits & (1 << (4 - col))) {
 				PixelLocation_t l = GetPixelLocation(cursor->pos_x + col, cursor->pos_y + row);
@@ -178,7 +114,20 @@ void DrawCharToFramebuffer(uint8_t* character, uint8_t* framebuffer, Cursor_t* c
 		}
 	}
 
-	cursor->pos_x += 8;
+	if (cursor->pos_x + 8 >= 120) {
+		cursor->pos_y += 8;
+		cursor->pos_x = 0;
+	} else {
+		cursor->pos_x += 8;
+	}
+}
+
+void WriteMessageToFramebuffer(const char* message, uint8_t* framebuffer, Cursor_t* cursor) {
+	size_t len = strlen(message);
+	printf("Size of message is %d\n", len);
+	for (int i = 0; i < len; i++) {
+		DrawCharToFramebuffer(message[i], framebuffer, cursor);
+	}
 }
 
 int main(void)
@@ -192,30 +141,27 @@ int main(void)
 	 * For PB6 & PB7 enable Alternate Function Mode.
 	 */
 	// Clear mode bits for PB7 and PB6
-	GPIOB->MODER &= ~(0xF << 12);
-	// Set bits to Alternate Mode
-	// 1 0 <- for 2 pins = 1 0 1 0 = 10
-	GPIOB->MODER |=   0xA << 12;
+	GPIOB->MODER.MODER6 = 2;
+	GPIOB->MODER.MODER7 = 2;
 
 	/**
 	 * Enable AFRL
 	 */
-	// Clear bits 24:31 in AFRL for pins 6 and 7
-	GPIOB->AFRL &= ~(0xFF << 24);
-	// Set bits for AF4
-	// 0 1 0 0 <- for 2 pins = 0 1 0 0 0 1 0 0 = 0x44
-	GPIOB->AFRL |=   0x44 << 24;
+	// We need AF4 for I2C
+	GPIOB->AFRL.AFR6 = 4;
+	GPIOB->AFRL.AFR7 = 4;
 
 	/**
 	 * Set Output type to open drain
 	 */
-	GPIOB->OTYPER |= 3 << 6;
+	GPIOB->OTYPER.OT6 = 1;
+	GPIOB->OTYPER.OT7 = 1;
 
 	/**
 	 * Set output speed to high speed
 	 */
-	GPIOB->OSPEEDR &= ~(0xF << 12);
-	GPIOB->OSPEEDR |=   0xA << 12;
+	GPIOB->OSPEEDR.OSPEEDR6 = 2;
+	GPIOB->OSPEEDR.OSPEEDR7 = 2;
 
 	/**
 	 * Set the I2C peripheral clock frequency 
@@ -280,22 +226,11 @@ int main(void)
 
 	static Cursor_t cursor;
 	cursor.pos_x = 0;
-	cursor.pos_y = 10;
+	cursor.pos_y = 0;
 
 	// Draw message
-	DrawCharToFramebuffer(h, framebuffer, &cursor);
-	DrawCharToFramebuffer(e, framebuffer, &cursor);
-	DrawCharToFramebuffer(l, framebuffer, &cursor);
-	DrawCharToFramebuffer(l, framebuffer, &cursor);
-	DrawCharToFramebuffer(o, framebuffer, &cursor);
-	DrawCharToFramebuffer(comma, framebuffer, &cursor);
-	DrawCharToFramebuffer(space, framebuffer, &cursor);
-	DrawCharToFramebuffer(w, framebuffer, &cursor);
-	DrawCharToFramebuffer(o, framebuffer, &cursor);
-	DrawCharToFramebuffer(r, framebuffer, &cursor);
-	DrawCharToFramebuffer(l, framebuffer, &cursor);
-	DrawCharToFramebuffer(d, framebuffer, &cursor);
-	DrawCharToFramebuffer(exclamation, framebuffer, &cursor);
+	const char* message = "Testing AFR...";
+	WriteMessageToFramebuffer(message, framebuffer, &cursor);
 
 	SetPageAndColToZeroAddr();
 	for (int i = 0; i < 1024; i++) {
