@@ -329,6 +329,62 @@ typedef struct {
 } I2CReg_t;
 
 typedef struct {
+	uint32_t HSION     : 1;
+	uint32_t HSIRDY    : 1;
+	uint32_t RESERVED0 : 1;
+	uint32_t HSITRIM   : 5;
+	uint32_t HSICAL    : 8;
+	uint32_t HSEON     : 1;
+	uint32_t HSERDY    : 1;
+	uint32_t HSEBYP    : 1;
+	uint32_t CSSON     : 1;
+	uint32_t RESERVED1 : 4;
+	uint32_t PLLON     : 1;
+	uint32_t PLLRDY    : 1;
+	uint32_t PLLI2SON  : 1;
+	uint32_t PLLI2SRDY : 1;
+	uint32_t RESERVED2 : 4;
+} RCC_CR_t;
+
+typedef struct {
+	uint32_t PLLM0     : 1;
+	uint32_t PLLM1     : 1;
+	uint32_t PLLM2     : 1;
+	uint32_t PLLM3     : 1;
+	uint32_t PLLM4     : 1;
+	uint32_t PLLM5     : 1;
+	uint32_t PLLN      : 9;
+	uint32_t RESERVED0 : 1;
+	uint32_t PLLP0     : 1;
+	uint32_t PLLP1     : 1;
+	uint32_t RESERVED1 : 4;
+	uint32_t PLLSRC    : 1;
+	uint32_t RESERVED2 : 1;
+	uint32_t PLLQ0     : 1;
+	uint32_t PLLQ1     : 1;
+	uint32_t PLLQ2     : 1;
+	uint32_t PLLQ3     : 1;
+	uint32_t RESERVED3 : 4;
+} RCC_PLLCFGR_t;
+
+typedef struct {
+	uint32_t SW0       : 1;
+	uint32_t SW1       : 1;
+	uint32_t SW2       : 1;
+	uint32_t SW3       : 1;
+	uint32_t HPRE      : 4;
+	uint32_t RESERVED0 : 2;
+	uint32_t PPRE1     : 3;
+	uint32_t PPRE2     : 3;
+	uint32_t RTCPRE    : 5;
+	uint32_t MCO1      : 2;
+	uint32_t I2SSCR    : 1;
+	uint32_t MCO1PRE   : 3;
+	uint32_t MCO2PRE   : 3;
+	uint32_t MCO2      : 2;
+} RCC_CFGR_t;
+
+typedef struct {
 	volatile uint32_t CR;
 	volatile uint32_t PLLCFGR;
 	volatile uint32_t CFGR;
