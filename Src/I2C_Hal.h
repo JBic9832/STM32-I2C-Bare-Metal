@@ -329,6 +329,178 @@ typedef struct {
 } I2CReg_t;
 
 typedef struct {
+	uint32_t HSION     : 1;
+	uint32_t HSIRDY    : 1;
+	uint32_t RESERVED0 : 1;
+	uint32_t HSITRIM   : 5;
+	uint32_t HSICAL    : 8;
+	uint32_t HSEON     : 1;
+	uint32_t HSERDY    : 1;
+	uint32_t HSEBYP    : 1;
+	uint32_t CSSON     : 1;
+	uint32_t RESERVED1 : 4;
+	uint32_t PLLON     : 1;
+	uint32_t PLLRDY    : 1;
+	uint32_t PLLI2SON  : 1;
+	uint32_t PLLI2SRDY : 1;
+	uint32_t RESERVED2 : 4;
+} RCC_CR_t;
+
+typedef struct {
+	uint32_t PLLM0     : 1;
+	uint32_t PLLM1     : 1;
+	uint32_t PLLM2     : 1;
+	uint32_t PLLM3     : 1;
+	uint32_t PLLM4     : 1;
+	uint32_t PLLM5     : 1;
+	uint32_t PLLN      : 9;
+	uint32_t RESERVED0 : 1;
+	uint32_t PLLP0     : 1;
+	uint32_t PLLP1     : 1;
+	uint32_t RESERVED1 : 4;
+	uint32_t PLLSRC    : 1;
+	uint32_t RESERVED2 : 1;
+	uint32_t PLLQ0     : 1;
+	uint32_t PLLQ1     : 1;
+	uint32_t PLLQ2     : 1;
+	uint32_t PLLQ3     : 1;
+	uint32_t RESERVED3 : 4;
+} RCC_PLLCFGR_t;
+
+typedef struct {
+	uint32_t SW0       : 1;
+	uint32_t SW1       : 1;
+	uint32_t SWS0      : 1;
+	uint32_t SWS1      : 1;
+	uint32_t HPRE      : 4;
+	uint32_t RESERVED0 : 2;
+	uint32_t PPRE1     : 3;
+	uint32_t PPRE2     : 3;
+	uint32_t RTCPRE    : 5;
+	uint32_t MCO1      : 2;
+	uint32_t I2SSCR    : 1;
+	uint32_t MCO1PRE   : 3;
+	uint32_t MCO2PRE   : 3;
+	uint32_t MCO2      : 2;
+} RCC_CFGR_t;
+
+typedef struct {
+	uint32_t LSIRDYF     : 1;
+	uint32_t LSERDYF     : 1;
+	uint32_t HSIRDYF     : 1;
+	uint32_t HSERDYF     : 1;
+	uint32_t PLLRDYF     : 1;
+	uint32_t PLLI2SRDYF  : 1;
+	uint32_t RESERVED0   : 1;
+	uint32_t CSSF        : 1;
+	uint32_t LSIRDYIE    : 1;
+	uint32_t LSERDYIE    : 1;
+	uint32_t HSIRDYIE    : 1;
+	uint32_t HSERDYIE    : 1;
+	uint32_t PLLRDYIE    : 1;
+	uint32_t PLLI2SRDYIE : 1;
+	uint32_t RESERVED1   : 2;
+	uint32_t LSIRDYC     : 1;
+	uint32_t LSERDYC     : 1;
+	uint32_t HSIRDYC     : 1;
+	uint32_t HSERDYC     : 1;
+	uint32_t PLLRDYC     : 1;
+	uint32_t PLLI2SRDYC  : 1;
+	uint32_t RESERVED2   : 1;
+	uint32_t CSSC        : 1;
+	uint32_t RESERVED3   : 8;
+} RCC_CIR_t;
+
+typedef struct {
+	uint32_t GPIOARST  : 1;
+	uint32_t GPIOBRST  : 1;
+	uint32_t GPIOCRST  : 1;
+	uint32_t GPIODRST  : 1;
+	uint32_t GPIOERST  : 1;
+	uint32_t GPIOFRST  : 1;
+	uint32_t GPIOGRST  : 1;
+	uint32_t GPIOHRST  : 1;
+	uint32_t GPIOIRST  : 1;
+	uint32_t RESERVED0 : 3;
+	uint32_t CRCRST    : 1;
+	uint32_t RESERVED1 : 8;
+	uint32_t DMA1RST   : 1;
+	uint32_t DMA2RST   : 1;
+	uint32_t RESERVED2 : 2;
+	uint32_t ETHMACRST : 1;
+	uint32_t RESERVED3 : 3;
+	uint32_t OTGHSRST  : 1;
+	uint32_t RESERVED4 : 2;
+} RCC_AHB1_RSTR_t;
+
+typedef struct {
+	uint32_t DCMIRST   : 1;
+	uint32_t RESERVED0 : 3;
+	uint32_t CRYPRST   : 1;
+	uint32_t HASRST    : 1;
+	uint32_t RNGRST    : 1;
+	uint32_t OTGFSRST  : 1;
+	uint32_t RESERVED1 :24;
+} RCC_AHB2_RSTR_t;
+
+typedef struct {
+	uint32_t FSMCRST  : 1;
+	uint32_t RESERVED :31;
+} RCC_AHB3_RSTR_t;
+
+typedef struct {
+	uint32_t TIM2RST   : 1;
+	uint32_t TIM3RST   : 1;
+	uint32_t TIM4RST   : 1;
+	uint32_t TIM5RST   : 1;
+	uint32_t TIM6RST   : 1;
+	uint32_t TIM7RST   : 1;
+	uint32_t TIM12RST  : 1;
+	uint32_t TIM13RST  : 1;
+	uint32_t TIM14RST  : 1;
+	uint32_t RESERVED0 : 2;
+	uint32_t WWDGRST   : 1;
+	uint32_t RESERVED1 : 2;
+	uint32_t SPI2RST   : 1;
+	uint32_t SPI3RST   : 1;
+	uint32_t RESERVED2 : 1;
+	uint32_t UART2RST  : 1;
+	uint32_t UART3RST  : 1;
+	uint32_t UART4RST  : 1;
+	uint32_t UART5RST  : 1;
+	uint32_t I2C1RST   : 1;
+	uint32_t I2C2RST   : 1;
+	uint32_t I2C3RST   : 1;
+	uint32_t RESERVED3 : 1;
+	uint32_t CAN1RST   : 1;
+	uint32_t CAN2RST   : 1;
+	uint32_t RESERVED4 : 1;
+	uint32_t PWRRST    : 1;
+	uint32_t DACRST    : 1;
+	uint32_t RESERVED5 : 2;
+} RCC_APB1_RSTR_t;
+
+typedef struct {
+	uint32_t TIM1RST   : 1;
+	uint32_t TIM8RST   : 1;
+	uint32_t RESERVED0 : 2;
+	uint32_t USART1RST : 1;
+	uint32_t USART6RST : 1;
+	uint32_t RESERVED1 : 2;
+	uint32_t ADCRST    : 1;
+	uint32_t RESERVED2 : 2;
+	uint32_t SDIORST   : 1;
+	uint32_t SPI1RST   : 1;
+	uint32_t RESERVED3 : 1;
+	uint32_t SYSCFGRST : 1;
+	uint32_t RESERVED4 : 1;
+	uint32_t TIM9RST   : 1;
+	uint32_t TIM10RST  : 1;
+	uint32_t TIM11RST  : 1;
+	uint32_t RESERVED5 :13;
+} RCC_APB2_RSTR_t;
+
+typedef struct {
 	volatile uint32_t CR;
 	volatile uint32_t PLLCFGR;
 	volatile uint32_t CFGR;
